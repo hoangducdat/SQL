@@ -1,0 +1,84 @@
+create database hethongQLvaCV;
+
+use hethongQLvaCV;
+
+
+
+create table company(
+company_id int not null primary key auto_increment ,
+company_name varchar(255)
+);
+
+create table project(
+project_id int not null primary key auto_increment,
+project_name varchar(255),
+company_id int,
+foreign key (company_id) references company(company_id)
+);
+
+create table task (
+task_id int not null primary key auto_increment,
+task_name varchar(255),
+completion_time date,
+project_id int,
+foreign key (project_id) references project(project_id)
+);
+
+
+select company.company_name , count(project.project_name) as tongduan from company 
+join project on company.company_id = project.company_id  
+group by company.company_id , project.company_id ;
+
+
+
+select project.project_name, company.company_name  ,sum(task.completion_time) as thoigianHT from project 
+join task on project.project_id = task.project_id 
+join company on company.company_name  = project.project_name
+group by project.project_name, company.company_name , task.completion_time ; 
+
+
+select project_id ,task_name, completion_time as dukien, completion_time  from task where project_id  = 1;
+
+
+
+create table employee (
+employee_id int not null primary key auto_increment,
+employee_name varchar(255)
+);
+
+
+alter  table task 
+add column employee_id int;
+
+
+
+insert into company( company_name)
+values ('BDS'),('ChoVayNangLai'),('CamDo'),('HoaBiNgan');
+
+
+insert into project(project_name, company_id)
+values ('MuaDat',1),('DoiNo',2),('TetDenXuanVe',3),('HoiUcDauThuong',4);
+
+
+insert into task(task_name,completion_time,project_id)
+values('AllIn','2024-02-01',1),('TimNhaConNo','2024-03-01',2),('ThanhLyDoCam','2024-02-02',3),('NhapKhauLoaiHoa','2024-02-15',4);
+
+
+update task set employee_id = 1 where task_id =1;
+update task set employee_id =2 where task_id =2 ;
+update task set employee_id = 3 where task_id =3 ;
+update task set employee_id = 4 where task_id =4 ;
+
+
+insert into employee(employee_name)
+values('nhanvienA'),('nhanvienB'),('nhanvienC'),('nhanvienD');
+
+
+select task.task_name, task.employee_id, employee.employee_name from task 
+join employee on employee.employee_id = task.employee_id  
+group by task.employee_id, employee.employee_name, task.task_name;
+
+
+select employee.employee_name , sum(task.completion_time) as tongthoigian from employee 
+join task on task.task_id = employee.employee_id 
+group by task.completion_time , employee.employee_name ;
